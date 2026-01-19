@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import koreanize_matplotlib
 import os
 from dotenv import load_dotenv
+import plotly.graph_objects as go
 
 load_dotenv()  # .env에 있는 환경변수를 읽어옴 -> 맨 앞줄에 작성
 
@@ -84,10 +85,20 @@ if confirm_btn:
                 st.dataframe(price_df.tail(10), width="stretch")
 
                 # Matplotlib 시각화
-                fig, ax = plt.subplots(figsize=(12, 5))
-                price_df['Close'].plot(ax=ax, grid=True, color='red')
-                ax.set_title(f"{company_name} 종가 추이", fontsize=15)
-                st.pyplot(fig)
+                # fig, ax = plt.subplots(figsize=(12, 5))
+                # price_df['Close'].plot(ax=ax, grid=True, color='red')
+                # ax.set_title(f"{company_name} 종가 추이", fontsize=15)
+                # st.pyplot(fig)
+                
+                df = price_df
+                st.subheader(f"[{company_name}] 주가 데이터 캔들차트")
+                fig = go.Figure(data=[go.Candlestick(x=df.index,
+                                open=df['Open'],
+                                high=df['High'],
+                                low=df['Low'],
+                                close=df['Close'])])
+
+                st.plotly_chart(fig)
 
                 # 엑셀 다운로드 기능
                 output = BytesIO()
